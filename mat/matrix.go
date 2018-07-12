@@ -64,8 +64,11 @@ func HamiltonianEnergy(spins *mat.VecDense, hamiltonian *mat.Dense) float64 {
 
 func QuadraticEnergy(vector *mat.VecDense, matrix *mat.Dense) float64 {
 	product := QuadraticForm(vector, matrix)
-	for i, _ := matrix.Dims(); i != 0; i-- {
-		product += matrix.At(i, i) * vector.AtVec(i)
+	{
+		l, _ := matrix.Dims()
+		for i := 0; i < l; i++ {
+			product += matrix.At(i, i) * vector.AtVec(i)
+		}
 	}
 	return 0.5 * product
 }
