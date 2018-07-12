@@ -45,14 +45,26 @@ func QuadraticForm(vector *mat.VecDense, matrix *mat.Dense) float64 {
 	return mat.Dot(tmp.RowView(0), vector)
 }
 
-func HamiltonianEnergy(vector *mat.VecDense, matrix *mat.Dense) float64 {
-	return 0
+func HamiltonianEnergy(spins *mat.VecDense, hamiltonian *mat.Dense) float64 {
+	l, _ := hamiltonian.Dims()
+
+	j := mat.NewDense(0, 0, nil)
+	j.Copy(hamiltonian)
+	for i := 0; i < l; i++ {
+		j.Set(i, i, 0)
+	}
+
+	jSum := -QuadraticForm(spins, j) / 2
+	hSum := 0
+	for i := 0; i < l; i++ {
+		hSum -= hamiltonian.At(i, i) * spins.AtVec(i)
+	}
+	return jSum + hSum
 }
 
 func QuadraticEnergy(vector *mat.VecDense, matrix *mat.Dense) float64 {
 	product := QuadraticForm(vector, matrix)
-	l, _ := matrix.Dims()
-	for i := 0; i < l; i++ {
+	for i, _ := matrix.Dims(); i != 0; i-- {
 		product += matrix.At(i, i) * vector.AtVec(i)
 	}
 	return 0.5 * product
