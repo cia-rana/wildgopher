@@ -13,11 +13,12 @@ import (
 func main() {
 	solution := solution.NewBasicSolution()
 	solution.Qubo = mymat.NewRandomSymmetricMatrix(10)
+	fmt.Println(mymat.String(solution.Qubo))
 
 	solver := solver.NewBasicSolver()
 	solver.Solution = solution
 
 	result := solver.Solve(endpoint.NewLocalEndpoint(simulated.NewAnnealer(nil, nil)), nil)
 
-	fmt.Println(mymat.String(<-result))
+	fmt.Println(mymat.String(result))
 }

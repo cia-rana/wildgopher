@@ -7,7 +7,7 @@ import (
 )
 
 type Solver interface {
-	Solve(endpoint endpoint.Endpoint, callback func(*mat.Dense)) chan<- *mat.VecDense
+	Solve(endpoint endpoint.Endpoint, callback func(*mat.Dense)) *mat.VecDense
 	InitQubo()
 	InitIsingInteractions()
 }

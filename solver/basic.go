@@ -17,11 +17,11 @@ type BasicSolver struct {
 func NewBasicSolver() *BasicSolver {
 	return &BasicSolver{
 		Solution: solution.NewBasicSolution(),
-		endpoint: endpoint.NewRemoteEndpoint(),
+		endpoint: endpoint.NewRemoteEndpoint(""),
 	}
 }
 
-func (b *BasicSolver) Solve(endpoint endpoint.Endpoint, callback func(*mat.VecDense)) <-chan *mat.VecDense {
+func (b *BasicSolver) Solve(endpoint endpoint.Endpoint, callback func(*mat.VecDense)) *mat.VecDense {
 	if l, _ := b.Solution.IsingInteractions.Dims(); l == 0 {
 		b.InitIsingInteractions()
 	}
@@ -31,7 +31,7 @@ func (b *BasicSolver) Solve(endpoint endpoint.Endpoint, callback func(*mat.VecDe
 	if !reflect.ValueOf(endpoint).IsNil() {
 		b.endpoint = endpoint
 	}
-	return b.endpoint.Dispatch(b.Solution, callback)
+	return b.endpoint.Dispatch(b.Solution)
 }
 
 func (b *BasicSolver) InitQubo() {

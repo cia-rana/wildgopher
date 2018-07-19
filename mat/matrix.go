@@ -3,6 +3,8 @@ package mat
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
+	"strings"
 	"time"
 
 	"gonum.org/v1/gonum/mat"
@@ -55,7 +57,7 @@ func HamiltonianEnergy(spins *mat.VecDense, hamiltonian *mat.Dense) float64 {
 	}
 
 	jSum := -QuadraticForm(spins, j) / 2
-	hSum := 0
+	hSum := 0.0
 	for i := 0; i < l; i++ {
 		hSum -= hamiltonian.At(i, i) * spins.AtVec(i)
 	}
@@ -71,6 +73,51 @@ func QuadraticEnergy(vector *mat.VecDense, matrix *mat.Dense) float64 {
 		}
 	}
 	return 0.5 * product
+}
+
+func ApplyPrecisionMatrix(matrix *mat.Dense, precisionFormat string) *mat.Dense {
+	f := func(i, j int, v float64) float64 {
+		w, err := strconv.ParseFloat(fmt.Sprintf(precisionFormat, v), 64)
+		if err != nil {
+			return 0
+		}
+		return w
+	}
+	r, c := matrix.Dims()
+	result := mat.NewDense(r, c, nil)
+	result.Apply(f, matrix)
+	return result
+}
+
+func BuildMatrixForParams(matrix *mat.Dense, strip bool) [][]float64 {
+	l, _ := matrix.Dims()
+	list := make([][]float64, l)
+	for i := 0; i < l; i++ {
+		list[i] = matrix.RawRowView(i)
+		if strip {
+			list[i] = list[i][i:]
+		}
+	}
+	return list
+}
+
+func BuildVectorFromVectorString(vectorString string) []float64 {
+	vectorString = strings.TrimSpace(vectorString)
+	if vectorString[0] != '[' || vectorString[len(vectorString)-1] != ']' {
+		return []float64{}
+	}
+
+	vectorStringElements := strings.Split(vectorString[1:len(vectorString)-1], ",")
+	result := make([]float64, len(vectorStringElements))
+	for i, e := range vectorStringElements {
+		f, err := strconv.ParseFloat(strings.TrimSpace(e), 64)
+		if err != nil {
+			return []float64{}
+		}
+		result[i] = f
+	}
+
+	return result
 }
 
 func String(matrix mat.Matrix) string {
