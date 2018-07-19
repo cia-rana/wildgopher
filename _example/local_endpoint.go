@@ -18,7 +18,7 @@ func main() {
 	solver := solver.NewBasicSolver()
 	solver.Solution = solution
 
-	result := solver.Solve(endpoint.NewLocalEndpoint(simulated.NewAnnealer(nil, nil)), nil)
+	result := solver.Solve(endpoint.NewLocalEndpoint(simulated.NewAnnealer(nil, nil)))
 
 	fmt.Println(mymat.String(result))
 }

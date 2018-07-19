@@ -21,7 +21,7 @@ func NewBasicSolver() *BasicSolver {
 	}
 }
 
-func (b *BasicSolver) Solve(endpoint endpoint.Endpoint, callback func(*mat.VecDense)) *mat.VecDense {
+func (b *BasicSolver) Solve(endpoint endpoint.Endpoint) *mat.VecDense {
 	if l, _ := b.Solution.IsingInteractions.Dims(); l == 0 {
 		b.InitIsingInteractions()
 	}

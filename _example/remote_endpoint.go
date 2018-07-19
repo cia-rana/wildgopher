@@ -17,7 +17,7 @@ func main() {
 	solver := solver.NewBasicSolver()
 	solver.Solution = solution
 
-	result := solver.Solve(endpoint.NewRemoteEndpoint(""), nil)
+	result := solver.Solve(endpoint.NewRemoteEndpoint(""))
 
 	fmt.Println(mymat.String(result))
 }
